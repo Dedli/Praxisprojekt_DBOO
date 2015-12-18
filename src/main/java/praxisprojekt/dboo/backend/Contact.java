@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.addressbook.backend;
+package praxisprojekt.dboo.backend;
 
 import org.apache.commons.beanutils.BeanUtils;
 
