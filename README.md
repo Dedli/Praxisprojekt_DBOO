@@ -1,11 +1,12 @@
-Addressbook Tutorial
+
+WS 2015/16
+TU Chemnitz
+Praxisprojekt Datenbanken-OO
 ====================
 
-This tutorial teaches you some of the basic concepts in [Vaadin Framework](https://vaadin.com). It is meant to be
-a fast read for learning how to get started - not an example on how application should be
-designed. Please note this example uses and requires Java 8 to work.
+This project uses [Vaadin Framework](https://vaadin.com) and is built up on the [addressbook-tutorial](https://github.com/vaadin/addressbook).
 
-![Addressbook Screenshot](addressbook_screenshot.png "Addressbook Screenshot")
+![Screenshot](screenshot.png "Screenshot")
 
 
 Running the example from the command line
@@ -30,37 +31,4 @@ To get the project up and running in IDEA, do:
   - Vaadin Web Application -> Plugins -> jetty -> jetty:run
   - Click the play button or right click and select Run (Select Debug instead to run in debug mode)
 
-You should now have a Jetty server running on localhost:8080. Navigate to http://localhost:8080 to play with the application
-
-Importing in NetBeans 8
---------------------
-These instructions were tested on NetBeans 8.0.2. You can get it from https://www.netbeans.org
-
-To checkout and run the project in NetBeans, do:
-- Team -> Git -> Clone
-- Set repository URL to https://github.com/vaadin/addressbook.git
-- Finish
-- Right click the imported project (Vaadin Addressbook Application) and select Run
-- Select GlassFish Server 4.1 -> Remember in Current IDE Session -> OK
-
-You should now have a GlassFish server running on localhost:8080 and a browser tab should also be automatically opened with this location
-
-Importing in Eclipse
---------------------
-These instructions were tested on Eclipse IDE for Java EE Developers Luna SR2. You can get it from http://eclipse.org/downloads/
-
-To checkout and run the project in Eclipse, do:
-- File -> Import...
-- Check out Maven Projects from SCM
-- Choose Git from SCM menu
-  - If you do not see "Git" in the SCM menu, click "Find more SCM connectors in the m2e Marketplace" and install "m2e-egit". Restart Eclipse and start over.
-- Set the repository URL to https://github.com/vaadin/addressbook.git
-- Right click the imported "addressbook" and choose Run As -> Maven Build...
-  - Set the goal to "jetty:run" and click "Run"
-
 You should now have a Jetty server running on localhost:8080. Navigate to [http://localhost:8080/](http://localhost:8080/) to play with the application
-
-To use the built in server adapters of Eclipse, instead of doing "Run As -> Maven Build..." you can do
-- Run As -> Run on Server
-- Select the server you want to run on, e.g. Apache Tomcat 8 and click ok
-- *Do not use the suggested J2EE Preview server* as it is outdated, deprecated and does not support Servlet 3, which is required for this application
