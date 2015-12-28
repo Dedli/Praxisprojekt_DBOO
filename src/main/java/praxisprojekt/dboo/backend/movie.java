@@ -13,7 +13,7 @@ import java.util.Date;
  */
 // Backend DTO class. This is just a typical Java backend implementation
 // class and nothing Vaadin specific.
-public class Contact implements Serializable, Cloneable {
+public class Movie implements Serializable, Cloneable {
 
     private Long id;
 
@@ -72,9 +72,9 @@ public class Contact implements Serializable, Cloneable {
     }
 
     @Override
-    public Contact clone() throws CloneNotSupportedException {
+    public Movie clone() throws CloneNotSupportedException {
         try {
-            return (Contact) BeanUtils.cloneBean(this);
+            return (Movie) BeanUtils.cloneBean(this);
         } catch (Exception ex) {
             throw new CloneNotSupportedException();
         }

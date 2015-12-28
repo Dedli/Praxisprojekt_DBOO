@@ -3,10 +3,10 @@ package praxisprojekt.dboo;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.event.ShortcutAction;
-import praxisprojekt.dboo.backend.Contact;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
+import praxisprojekt.dboo.backend.Movie;
 
 /* Create custom UI Components.
  * Testing
@@ -16,22 +16,22 @@ import com.vaadin.ui.themes.ValoTheme;
  * Similarly named field by naming convention or customized
  * with @PropertyId annotation.
  */
-public class ContactForm extends FormLayout {
+public class MovieForm extends FormLayout {
 
-    Button save = new Button("Save", this::save);
-    Button cancel = new Button("Cancel", this::cancel);
-    TextField firstName = new TextField("First name");
-    TextField lastName = new TextField("Last name");
+    Button save = new Button("Speichern", this::save);
+    Button cancel = new Button("Abbruch", this::cancel);
+    TextField firstName = new TextField("Filmname");
+    TextField lastName = new TextField("Erscheinungsjahr");
     TextField phone = new TextField("Phone");
     TextField email = new TextField("Email");
     DateField birthDate = new DateField("Birth date");
 
-    Contact contact;
+    Movie movie;
 
     // Easily bind forms to beans and manage validation and buffering
-    BeanFieldGroup<Contact> formFieldBindings;
+    BeanFieldGroup<Movie> formFieldBindings;
 
-    public ContactForm() {
+    public MovieForm() {
         configureComponents();
         buildLayout();
     }
@@ -74,13 +74,13 @@ public class ContactForm extends FormLayout {
             formFieldBindings.commit();
 
             // Save DAO to backend with direct synchronous service API
-            getUI().service.save(contact);
+            getUI().service.save(movie);
 
             String msg = String.format("Saved '%s %s'.",
-                    contact.getFirstName(),
-                    contact.getLastName());
+                    movie.getFirstName(),
+                    movie.getLastName());
             Notification.show(msg,Type.TRAY_NOTIFICATION);
-            getUI().refreshContacts();
+            getUI().refreshMovies();
         } catch (FieldGroup.CommitException e) {
             // Validation exceptions could be shown here
         }
@@ -89,17 +89,17 @@ public class ContactForm extends FormLayout {
     public void cancel(Button.ClickEvent event) {
         // Place to call business logic.
         Notification.show("Cancelled", Type.TRAY_NOTIFICATION);
-        getUI().contactList.select(null);
+        getUI().movieList.select(null);
     }
 
-    void edit(Contact contact) {
-        this.contact = contact;
-        if(contact != null) {
+    void edit(Movie movie) {
+        this.movie = movie;
+        if(movie != null) {
             // Bind the properties of the contact POJO to fiels in this form
-            formFieldBindings = BeanFieldGroup.bindFieldsBuffered(contact, this);
+            formFieldBindings = BeanFieldGroup.bindFieldsBuffered(movie, this);
             firstName.focus();
         }
-        setVisible(contact != null);
+        setVisible(movie != null);
     }
 
     @Override

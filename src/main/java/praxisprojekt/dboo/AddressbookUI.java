@@ -6,9 +6,9 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import praxisprojekt.dboo.backend.Contact;
-import praxisprojekt.dboo.backend.ContactService;
 import com.vaadin.ui.*;
+import praxisprojekt.dboo.backend.Movie;
+import praxisprojekt.dboo.backend.MovieService;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -29,16 +29,16 @@ public class AddressbookUI extends UI {
 	 * are over 500 more in vaadin.com/directory.
      */
     TextField filter = new TextField();
-    Grid contactList = new Grid();
-    Button newContact = new Button("Neuer Eintrag");
+    Grid movieList = new Grid();
+    Button newMovie = new Button("Neuer Eintrag");
 
     // ContactForm is an example of a custom component class
-    ContactForm contactForm = new ContactForm();
+    MovieForm movieForm = new MovieForm();
 
     // ContactService is a in-memory mock DAO that mimics
     // a real-world datasource. Typically implemented for
     // example as EJB or Spring Data based service.
-    ContactService service = ContactService.createDemoService();
+    MovieService service = MovieService.createDemoService();
 
 
     /* The "Main method".
@@ -61,20 +61,20 @@ public class AddressbookUI extends UI {
          * to synchronously handle those events. Vaadin automatically sends
          * only the needed changes to the web page without loading a new page.
          */
-        newContact.addClickListener(e -> contactForm.edit(new Contact()));
+        newMovie.addClickListener(e -> movieForm.edit(new Movie()));
 
-        filter.setInputPrompt("Filter contacts...");
-        filter.addTextChangeListener(e -> refreshContacts(e.getText()));
+        filter.setInputPrompt("Filter movies...");
+        filter.addTextChangeListener(e -> refreshMovies(e.getText()));
 
-        contactList.setContainerDataSource(new BeanItemContainer<>(Contact.class));
-        contactList.setColumnOrder("firstName", "lastName", "email");
-        contactList.removeColumn("id");
-        contactList.removeColumn("birthDate");
-        contactList.removeColumn("phone");
-        contactList.setSelectionMode(Grid.SelectionMode.SINGLE);
-        contactList.addSelectionListener(e
-                -> contactForm.edit((Contact) contactList.getSelectedRow()));
-        refreshContacts();
+        movieList.setContainerDataSource(new BeanItemContainer<>(Movie.class));
+        movieList.setColumnOrder("firstName", "lastName", "email");
+        movieList.removeColumn("id");
+        movieList.removeColumn("birthDate");
+        movieList.removeColumn("phone");
+        movieList.setSelectionMode(Grid.SelectionMode.SINGLE);
+        movieList.addSelectionListener(e
+                -> movieForm.edit((Movie) movieList.getSelectedRow()));
+        refreshMovies();
     }
 
     /* Robust layouts.
@@ -89,17 +89,17 @@ public class AddressbookUI extends UI {
      * with Vaadin Designer, CSS and HTML.
      */
     private void buildLayout() {
-        HorizontalLayout actions = new HorizontalLayout(filter, newContact);
+        HorizontalLayout actions = new HorizontalLayout(filter, newMovie);
         actions.setWidth("99%");
         filter.setWidth("99%");
         actions.setExpandRatio(filter, 1);
 
-        VerticalLayout left = new VerticalLayout(actions, contactList);
+        VerticalLayout left = new VerticalLayout(actions, movieList);
         left.setSizeFull();
-        contactList.setSizeFull();
-        left.setExpandRatio(contactList, 1);
+        movieList.setSizeFull();
+        left.setExpandRatio(movieList, 1);
 
-        HorizontalLayout mainLayout = new HorizontalLayout(left, contactForm);
+        HorizontalLayout mainLayout = new HorizontalLayout(left, movieForm);
         mainLayout.setSizeFull();
         mainLayout.setExpandRatio(left, 1);
 
@@ -115,14 +115,14 @@ public class AddressbookUI extends UI {
      * With Vaadin you can follow MVC, MVP or any other design pattern
      * you choose.
      */
-    void refreshContacts() {
-        refreshContacts(filter.getValue());
+    void refreshMovies() {
+        refreshMovies(filter.getValue());
     }
 
-    private void refreshContacts(String stringFilter) {
-        contactList.setContainerDataSource(new BeanItemContainer<>(
-                Contact.class, service.findAll(stringFilter)));
-        contactForm.setVisible(false);
+    private void refreshMovies(String stringFilter) {
+        movieList.setContainerDataSource(new BeanItemContainer<>(
+                Movie.class, service.findAll(stringFilter)));
+        movieForm.setVisible(false);
     }
 
 
