@@ -22,7 +22,7 @@ public class MovieForm extends FormLayout {
     Button cancel = new Button("Abbruch", this::cancel);
     TextField firstName = new TextField("Filmname");
     TextField lastName = new TextField("Erscheinungsjahr");
-    TextField phone = new TextField("Phone");
+    TextField year = new TextField("Year");
     TextField email = new TextField("Email");
     DateField birthDate = new DateField("Birth date");
 
@@ -54,7 +54,7 @@ public class MovieForm extends FormLayout {
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
-		addComponents(actions, firstName, lastName, phone, email, birthDate);
+		addComponents(actions, firstName, lastName, year, email, birthDate);
     }
 
     /* Use any JVM language.
@@ -77,7 +77,7 @@ public class MovieForm extends FormLayout {
             getUI().service.save(movie);
 
             String msg = String.format("Saved '%s %s'.",
-                    movie.getFirstName(),
+                    movie.getFilmName(),
                     movie.getLastName());
             Notification.show(msg,Type.TRAY_NOTIFICATION);
             getUI().refreshMovies();

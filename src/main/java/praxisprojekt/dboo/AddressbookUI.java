@@ -63,14 +63,14 @@ public class AddressbookUI extends UI {
          */
         newMovie.addClickListener(e -> movieForm.edit(new Movie()));
 
-        filter.setInputPrompt("Filter movies...");
+        filter.setInputPrompt("Filme filtern...");
         filter.addTextChangeListener(e -> refreshMovies(e.getText()));
 
         movieList.setContainerDataSource(new BeanItemContainer<>(Movie.class));
-        movieList.setColumnOrder("firstName", "lastName", "email");
+        movieList.setColumnOrder("filmName", "lastName", "email");
         movieList.removeColumn("id");
         movieList.removeColumn("birthDate");
-        movieList.removeColumn("phone");
+        movieList.removeColumn("year");
         movieList.setSelectionMode(Grid.SelectionMode.SINGLE);
         movieList.addSelectionListener(e
                 -> movieForm.edit((Movie) movieList.getSelectedRow()));
@@ -90,8 +90,8 @@ public class AddressbookUI extends UI {
      */
     private void buildLayout() {
         HorizontalLayout actions = new HorizontalLayout(filter, newMovie);
-        actions.setWidth("99%");
-        filter.setWidth("99%");
+        actions.setWidth("100%");
+        filter.setWidth("100%");
         actions.setExpandRatio(filter, 1);
 
         VerticalLayout left = new VerticalLayout(actions, movieList);

@@ -36,11 +36,11 @@ public class MovieService {
             Calendar cal = Calendar.getInstance();
             for (int i = 0; i < 100; i++) {
                 Movie contact = new Movie();
-                contact.setFirstName(fnames[r.nextInt(fnames.length)]);
+                contact.setFilmName(fnames[r.nextInt(fnames.length)]);
                 contact.setLastName(lnames[r.nextInt(fnames.length)]);
-                contact.setEmail(contact.getFirstName().toLowerCase() + "@"
+                contact.setEmail(contact.getFilmName().toLowerCase() + "@"
                         + contact.getLastName().toLowerCase() + ".com");
-                contact.setPhone("+ 358 555 " + (100 + r.nextInt(900)));
+                contact.setYear("19" + (r.nextInt(90)));
                 cal.set(1930 + r.nextInt(70),
                         r.nextInt(11), r.nextInt(28));
                 contact.setBirthDate(cal.getTime());
@@ -52,18 +52,18 @@ public class MovieService {
         return instance;
     }
 
-    private HashMap<Long, Movie> contacts = new HashMap<>();
+    private HashMap<Long, Movie> movies = new HashMap<>();
     private long nextId = 0;
 
     public synchronized List<Movie> findAll(String stringFilter) {
         ArrayList arrayList = new ArrayList();
-        for (Movie contact : contacts.values()) {
+        for (Movie movie : movies.values()) {
             try {
                 boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-                        || contact.toString().toLowerCase()
+                        || movie.toString().toLowerCase()
                                 .contains(stringFilter.toLowerCase());
                 if (passesFilter) {
-                    arrayList.add(contact.clone());
+                    arrayList.add(movie.clone());
                 }
             } catch (CloneNotSupportedException ex) {
                 Logger.getLogger(MovieService.class.getName()).log(
@@ -81,11 +81,11 @@ public class MovieService {
     }
 
     public synchronized long count() {
-        return contacts.size();
+        return movies.size();
     }
 
     public synchronized void delete(Movie value) {
-        contacts.remove(value.getId());
+        movies.remove(value.getId());
     }
 
     public synchronized void save(Movie entry) {
@@ -97,7 +97,7 @@ public class MovieService {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        contacts.put(entry.getId(), entry);
+        movies.put(entry.getId(), entry);
     }
 
 }
