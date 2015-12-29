@@ -20,11 +20,11 @@ public class MovieForm extends FormLayout {
 
     Button save = new Button("Speichern", this::save);
     Button cancel = new Button("Abbruch", this::cancel);
-    TextField firstName = new TextField("Filmname");
-    TextField lastName = new TextField("Erscheinungsjahr");
-    TextField year = new TextField("Year");
-    TextField email = new TextField("Email");
-    DateField birthDate = new DateField("Birth date");
+    TextField filmname = new TextField("Filmname");
+    TextField jahr = new TextField("Erscheinungsjahr");
+    TextField regisseur = new TextField("Regisseur");
+    TextField schauspieler = new TextField("Schauspieler");
+   // DateField schauspieler = new DateField("Schauspieler");
 
     Movie movie;
 
@@ -44,6 +44,7 @@ public class MovieForm extends FormLayout {
          */
         save.setStyleName(ValoTheme.BUTTON_PRIMARY);
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
         setVisible(false);
     }
 
@@ -54,7 +55,7 @@ public class MovieForm extends FormLayout {
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
-		addComponents(actions, firstName, lastName, year, email, birthDate);
+		addComponents(actions, filmname, regisseur, jahr, schauspieler);
     }
 
     /* Use any JVM language.
@@ -76,9 +77,8 @@ public class MovieForm extends FormLayout {
             // Save DAO to backend with direct synchronous service API
             getUI().service.save(movie);
 
-            String msg = String.format("Saved '%s %s'.",
-                    movie.getFilmName(),
-                    movie.getLastName());
+            String msg = String.format("'%s' gespeichert.",
+                    movie.getFilmname());
             Notification.show(msg,Type.TRAY_NOTIFICATION);
             getUI().refreshMovies();
         } catch (FieldGroup.CommitException e) {
@@ -88,7 +88,8 @@ public class MovieForm extends FormLayout {
 
     public void cancel(Button.ClickEvent event) {
         // Place to call business logic.
-        Notification.show("Cancelled", Type.TRAY_NOTIFICATION);
+        Notification.show("Abgebrochen", Type.TRAY_NOTIFICATION);
+        getUI().refreshMovies();
         getUI().movieList.select(null);
     }
 
@@ -97,14 +98,14 @@ public class MovieForm extends FormLayout {
         if(movie != null) {
             // Bind the properties of the contact POJO to fiels in this form
             formFieldBindings = BeanFieldGroup.bindFieldsBuffered(movie, this);
-            firstName.focus();
+            filmname.focus();
         }
         setVisible(movie != null);
     }
 
     @Override
-    public AddressbookUI getUI() {
-        return (AddressbookUI) super.getUI();
+    public MovieUI getUI() {
+        return (MovieUI) super.getUI();
     }
 
 }

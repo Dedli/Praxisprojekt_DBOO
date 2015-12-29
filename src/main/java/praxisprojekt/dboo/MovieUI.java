@@ -20,7 +20,7 @@ import javax.servlet.annotation.WebServlet;
  */
 @Title("Praxisprojekt")
 @Theme("valo")
-public class AddressbookUI extends UI {
+public class MovieUI extends UI {
 
 	/* Hundreds of widgets.
 	 * Vaadin's user interface components are just Java objects that encapsulate
@@ -67,10 +67,11 @@ public class AddressbookUI extends UI {
         filter.addTextChangeListener(e -> refreshMovies(e.getText()));
 
         movieList.setContainerDataSource(new BeanItemContainer<>(Movie.class));
-        movieList.setColumnOrder("filmName", "lastName", "email");
+        movieList.setColumnOrder("filmname", "jahr");
         movieList.removeColumn("id");
+        movieList.removeColumn("regisseur");
         movieList.removeColumn("birthDate");
-        movieList.removeColumn("year");
+        movieList.removeColumn("schauspieler");
         movieList.setSelectionMode(Grid.SelectionMode.SINGLE);
         movieList.addSelectionListener(e
                 -> movieForm.edit((Movie) movieList.getSelectedRow()));
@@ -134,7 +135,7 @@ public class AddressbookUI extends UI {
      *  class name and turn on production mode when you have finished developing the application.
      */
     @WebServlet(urlPatterns = "/*")
-    @VaadinServletConfiguration(ui = AddressbookUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = MovieUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 

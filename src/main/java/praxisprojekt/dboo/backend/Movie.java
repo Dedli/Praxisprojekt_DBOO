@@ -15,10 +15,10 @@ public class Movie implements Serializable, Cloneable {
 
     private Long id;
 
-    private String filmName = "";
-    private String lastName = "";
-    private String year = "";
-    private String email = "";
+    private String filmname = "";
+    private String jahr = "";
+    private String regisseur = "";
+    private String schauspieler = "";
     private Date birthDate;
 
     public Long getId() {
@@ -29,36 +29,36 @@ public class Movie implements Serializable, Cloneable {
         this.id = id;
     }
 
-    public String getFilmName() {
-        return filmName;
+    public String getFilmname() {
+        return filmname;
     }
 
-    public void setFilmName(String firstName) {
-        this.filmName = firstName;
+    public void setFilmname(String filmname) {
+        this.filmname = filmname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getRegisseur() {
+        return regisseur;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setRegisseur(String regisseur) {
+        this.regisseur = regisseur;
     }
 
-    public String getYear() {
-        return year;
+    public String getJahr() {
+        return jahr;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setJahr(String jahr) {
+        this.jahr = jahr;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSchauspieler() {
+        return schauspieler;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSchauspieler(String schauspieler) {
+        this.schauspieler = schauspieler;
     }
 
     public Date getBirthDate() {
@@ -80,9 +80,9 @@ public class Movie implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "Contact{" + "id=" + id + ", firstName=" + filmName
-                + ", lastName=" + lastName + ", year=" + year + ", email="
-                + email + ", birthDate=" + birthDate + '}';
+        return "Movie{" + /*"id=" + id +*/ "filmname=" + filmname
+                + ", regisseur=" + regisseur + ", jahr=" + jahr + ", schauspieler="
+                + schauspieler + ", birthDate=" + birthDate + '}';
     }
 
 }
