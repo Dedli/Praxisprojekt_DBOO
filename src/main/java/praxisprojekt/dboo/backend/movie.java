@@ -11,15 +11,13 @@ import java.util.Date;
  * Serializable and cloneable Java Object that are typically persisted
  * in the database and can also be easily converted to different formats like JSON.
  */
-// Backend DTO class. This is just a typical Java backend implementation
-// class and nothing Vaadin specific.
 public class Movie implements Serializable, Cloneable {
 
     private Long id;
 
-    private String firstName = "";
+    private String filmName = "";
     private String lastName = "";
-    private String phone = "";
+    private String year = "";
     private String email = "";
     private Date birthDate;
 
@@ -31,12 +29,12 @@ public class Movie implements Serializable, Cloneable {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFilmName() {
+        return filmName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFilmName(String firstName) {
+        this.filmName = firstName;
     }
 
     public String getLastName() {
@@ -47,12 +45,12 @@ public class Movie implements Serializable, Cloneable {
         this.lastName = lastName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getYear() {
+        return year;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public String getEmail() {
@@ -82,8 +80,8 @@ public class Movie implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "Contact{" + "id=" + id + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", phone=" + phone + ", email="
+        return "Contact{" + "id=" + id + ", firstName=" + filmName
+                + ", lastName=" + lastName + ", year=" + year + ", email="
                 + email + ", birthDate=" + birthDate + '}';
     }
 
