@@ -1,7 +1,9 @@
 package praxisprojekt.dboo;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
@@ -24,7 +26,17 @@ public class MovieForm extends FormLayout {
     TextField jahr = new TextField("Erscheinungsjahr");
     TextField regisseur = new TextField("Regisseur");
     TextField schauspieler = new TextField("Schauspieler");
-   // DateField schauspieler = new DateField("Schauspieler");
+
+    Button difference = new Button("Difference", this::nf2_difference);
+    Button intersection = new Button("Intersection", this::nf2_intersection);
+    Button union = new Button("Union", this::nf2_union);
+    Button subset = new Button("Subset", this::nf2_subset);
+    Button properSubset = new Button("Proper Subset", this::nf2_properSubset);
+    Button equal = new Button("Equal", this::nf2_equal);
+    Button notEqual = new Button("Not Equal", this::nf2_notEqual);
+    Label result = new Label("Ergebnis: ");
+
+    ComboBox moviePicker = new ComboBox("Wähle einen Film:");
 
     Movie movie;
 
@@ -55,7 +67,24 @@ public class MovieForm extends FormLayout {
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
-		addComponents(actions, filmname, regisseur, jahr, schauspieler);
+        HorizontalLayout firstRow = new HorizontalLayout(union, intersection, difference);
+        firstRow.setSpacing(true);
+        HorizontalLayout secondRow = new HorizontalLayout(subset, properSubset);
+        secondRow.setSpacing(true);
+        HorizontalLayout thirdRow = new HorizontalLayout(equal, notEqual);
+        thirdRow.setSpacing(true);
+        VerticalLayout lowerButtons = new VerticalLayout(firstRow, secondRow, thirdRow);
+        lowerButtons.setSpacing(true);
+
+        difference.setDescription("zeigt die Differenz zwischen Schauspielern und Regisseur");
+        intersection.setDescription("zeigt die gemeinsamen Personen in Schauspieler und Regisseur");
+        union.setDescription("zeigt alle Personen aus den Schauspielern und Regisseuren");
+
+		addComponents(actions, filmname, regisseur, jahr, schauspieler, lowerButtons, moviePicker, result);
+        result.setVisible(false);
+        moviePicker.addItem("test");
+        moviePicker.addItem("anderer");
+        moviePicker.setVisible(false);
     }
 
     /* Use any JVM language.
@@ -108,4 +137,113 @@ public class MovieForm extends FormLayout {
         return (MovieUI) super.getUI();
     }
 
+    // nf2-buttons
+    public void nf2_difference(Button.ClickEvent event) {
+        resetButtons();
+        difference.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("Difference");
+                result.setValue("[..., ..., ...]");
+            }
+        });
+    }
+    public void nf2_intersection(Button.ClickEvent event) {
+        resetButtons();
+        intersection.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("Intersection");
+                result.setValue("[..., ..., ...]");
+            }
+        });
+    }
+    public void nf2_union(Button.ClickEvent event) {
+        resetButtons();
+        union.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("Union");
+                result.setValue("[..., ..., ...]");
+            }
+        });
+    }
+    public void nf2_subset(Button.ClickEvent event) {
+        resetButtons();
+        subset.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("Subset");
+                result.setValue("true or false");
+            }
+        });
+    }
+    public void nf2_properSubset(Button.ClickEvent event) {
+        resetButtons();
+        properSubset.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("proper Subset");
+                result.setValue("true or false");
+            }
+        });
+    }
+    public void nf2_equal(Button.ClickEvent event) {
+        resetButtons();
+        equal.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("Equal");
+                result.setValue("true or false");
+            }
+        });
+    }
+    public void nf2_notEqual(Button.ClickEvent event) {
+        resetButtons();
+        notEqual.setEnabled(false);
+        result.setVisible(false);
+        moviePicker.setVisible(true);
+        moviePicker.addListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
+                result.setVisible(true);
+                result.setCaption("not Equal");
+                result.setValue("true or false");
+            }
+        });
+    }
+    public void resetButtons(){
+        moviePicker.select(moviePicker.getNullSelectionItemId());
+        intersection.setEnabled(true);
+        difference.setEnabled(true);
+        union.setEnabled(true);
+        subset.setEnabled(true);
+        properSubset.setEnabled(true);
+        equal.setEnabled(true);
+        notEqual.setEnabled(true);
+    }
 }
