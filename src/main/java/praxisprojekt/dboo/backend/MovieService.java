@@ -9,9 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Separate Java service class.
- * Backend implementation for the address book application, with "detached entities"
- * simulating real world DAO. Typically these something that the Java EE
- * or Spring backend services provide.
+ * Backend implementation for the application
  */
 public class MovieService {
 
