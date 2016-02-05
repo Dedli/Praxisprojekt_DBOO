@@ -15,7 +15,6 @@ public class PostgresRepository {
 
     private Logger lgr = Logger.getLogger(this.getClass().getName());
     Connection conn = null;
-    private long nextId = 0;
 
     public PostgresRepository() {
         String url = "jdbc:postgresql://pgsql.hrz.tu-chemnitz.de/praxisprojekt_dboo";
@@ -29,11 +28,26 @@ public class PostgresRepository {
         }
     }
 
-    public void insert(String table, String values) {
-        // TODO
+    public void insert(Movie entry) {
+        System.out.println(entry);
+        String sqlString = "SELECT insertMovie('"+entry.getFilmname()+"',"+entry.getJahr()+",ARRAY["+entry.getSchauspieler()+"]::character varying[],ARRAY["+entry.getRegisseur()+"]::character varying[],ARRAY["+entry.getGenre()+"]::character varying[]);";
+        long startTime = System.nanoTime();
+        String result = "";
+        try {
+            Statement s = conn.createStatement();
+            boolean r = s.execute(sqlString);
+            System.out.println(sqlString);
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long estimatedTime = System.nanoTime() - startTime;
+        final double seconds = ((double) estimatedTime / 1000000000);
+
+        System.out.println("Query ended in " + new DecimalFormat("#.########").format(seconds) + " s.");
     }
 
-    public void update(String table, String values) {
+    public void update(String table, String mapper_id) {
         // TODO
     }
 
@@ -41,28 +55,50 @@ public class PostgresRepository {
         // TODO
     }
 
-    public HashMap standardSearch(String table){
+    public String operatorQuery(Movie movie1, Movie movie2, String column, String table, String operator){
+        System.out.println("movie1: " + movie1 + " movie2: " + movie2);
         long startTime = System.nanoTime();
-        HashMap<Long, Movie> queriedMovies = new HashMap<>();
+        String result = "";
         try {
             Statement s = conn.createStatement();
-            ResultSet r = s.executeQuery("SELECT id, title, year FROM " + table + ";");
+            String sqlString = "SELECT (SELECT "+column+" FROM "+table+" WHERE mapper_id=" + movie1.getId() + ") "+operator+" (SELECT "+column+" FROM "+table+" WHERE mapper_id=" + movie2.getId() + ");";
+            ResultSet r = s.executeQuery(sqlString);
+            System.out.println(sqlString);
             while (r.next()) {
-                Long id = (long) r.getInt(1);
-                String title = r.getString(2);
-                int year = r.getInt(3);
-                Movie thisMovie = new Movie();
-                // set movie values
-                thisMovie.setFilmname(title);
-                thisMovie.setSchauspieler("Michael Jackson " + "Brad Pitt");
-                thisMovie.setRegisseur("Stanley Kubrick");
-                thisMovie.setJahr("" + year);
-
-                queriedMovies.put(id, thisMovie);
-                nextId++;
+                result = r.getString(1);
             }
             s.close();
-            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long estimatedTime = System.nanoTime() - startTime;
+        final double seconds = ((double) estimatedTime / 1000000000);
+
+        System.out.println("Query ended in " + new DecimalFormat("#.########").format(seconds) + " s.");
+        return result;
+    }
+
+    public HashMap standardSearch(String table){
+        long startTime = System.nanoTime();
+        HashMap<Integer, Movie> queriedMovies = new HashMap<>();
+        try {
+            Statement s = conn.createStatement();
+            //ResultSet r = s.executeQuery("SELECT title, year, mapper_id FROM " + table + ";");
+            ResultSet r = s.executeQuery("SELECT movie.title, movie.year, movie.mapper_id, director, actor, genre FROM movie JOIN director_nest_director ON director_nest_director.mapper_id= movie.mapper_id JOIN actor_nest_actor ON actor_nest_actor.mapper_id= movie.mapper_id JOIN genre_nest_genre ON genre_nest_genre.mapper_id= movie.mapper_id;");
+            while (r.next()) {
+                String title = r.getString(1);
+                int year = r.getInt(2);
+                int mapper_id = r.getInt(3);
+                String director = r.getString(4);
+                String actor = r.getString(5);
+                String genre = r.getString(6);
+                // create and set movie values
+                Movie thisMovie = new Movie();
+                thisMovie.setMovie(title, "" + year, new Integer(mapper_id), director, actor, genre);
+
+                queriedMovies.put(mapper_id, thisMovie);
+            }
+            s.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

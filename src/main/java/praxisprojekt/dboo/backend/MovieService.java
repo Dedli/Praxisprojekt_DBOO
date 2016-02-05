@@ -18,13 +18,13 @@ import java.util.logging.Logger;
 public class MovieService {
 
     private static MovieService instance;
+    private static PostgresRepository repo;
 
     public static MovieService createDemoService() {
         if (instance == null) {
-
             final MovieService movieService = new MovieService();
-            PostgresRepository repo = new PostgresRepository();
-            HashMap hashMap= repo.standardSearch("movie");
+            repo = new PostgresRepository();
+            HashMap hashMap = repo.standardSearch("movie");
 
             for (Object value : hashMap.values())
             {
@@ -33,12 +33,14 @@ public class MovieService {
             }
             instance = movieService;
         }
-
         return instance;
     }
 
-    private HashMap<Long, Movie> movies = new HashMap<>();
-    private long nextId = 0;
+    private HashMap<Integer, Movie> movies = new HashMap<>();
+
+    public HashMap<Integer, Movie> getMovies() {
+        return movies;
+    }
 
     public synchronized List<Movie> findAll(String stringFilter) {
         ArrayList arrayList = new ArrayList();
@@ -55,13 +57,13 @@ public class MovieService {
                         Level.SEVERE, null, ex);
             }
         }
-        Collections.sort(arrayList, new Comparator<Movie>() {
+        //Collections.sort(arrayList, new Comparator<Movie>() {
 
-            @Override
-            public int compare(Movie o1, Movie o2) {
-                return (int) (o2.getId() - o1.getId());
-            }
-        });
+         //   @Override
+         //   public int compare(Movie o1, Movie o2) {
+         //       return (int) (o2.getId() - o1.getId());
+         //   }
+       // });
         return arrayList;
     }
 
@@ -74,9 +76,9 @@ public class MovieService {
     }
 
     public synchronized void save(Movie entry) {
-        if (entry.getId() == null) {
-            entry.setId(nextId++);
-        }
+        //if (entry.getId() == null) {
+        //    entry.setId(nextId++);
+        //}
         try {
             entry = (Movie) BeanUtils.cloneBean(entry);
         } catch (Exception ex) {
@@ -85,4 +87,58 @@ public class MovieService {
         movies.put(entry.getId(), entry);
     }
 
+    public synchronized void saveToDb(Movie entry) {
+        repo.insert(entry);
+    }
+
+    public String nf2_query(String functionality, String column, Movie movie1, Movie movie2) {
+        System.out.println(functionality + movie1 + movie2);
+        String resultString = "";
+        resultString = repo.operatorQuery(movie1, movie2, tableColumnString(column), tableString(column), operatorString(functionality));
+        return resultString;
+    }
+
+    public String tableString(String column){
+        String table = "";
+        if(column == "Genre"){
+            table = "genre_nest_genre";
+        } else if(column == "Schauspieler"){
+            table = "actor_nest_actor";
+        } else if(column == "Regisseur"){
+            table = "director_nest_director";
+        }
+        return table;
+    }
+
+    public String tableColumnString(String column){
+        String table = "";
+        if(column == "Genre"){
+            table = "genre";
+        } else if(column == "Schauspieler"){
+            table = "actor";
+        } else if(column == "Regisseur"){
+            table = "director";
+        }
+        return table;
+    }
+
+    public String operatorString(String functionality){
+        String operator = "";
+        if(functionality == "Union"){
+            operator = "|";
+        } else if(functionality == "Difference"){
+            operator = "/";
+        } else if(functionality == "Intersection"){
+            operator = "&";
+        } else if(functionality == "Subset"){
+            operator = "<<";
+        } else if(functionality == "Proper Subset"){
+            operator = "<<=";
+        } else if(functionality == "Equal"){
+            operator = "==";
+        } else if(functionality == "Not Equal"){
+            operator = "!==";
+        }
+        return operator;
+    }
 }

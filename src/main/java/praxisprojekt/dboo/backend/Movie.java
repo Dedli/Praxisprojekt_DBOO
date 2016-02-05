@@ -13,21 +13,27 @@ import java.util.Date;
  */
 public class Movie implements Serializable, Cloneable {
 
-    private Long id;
+    private Integer mapper_id;
 
     private String filmname = "";
     private String jahr = "";
     private String regisseur = "";
     private String schauspieler = "";
-    private Date birthDate;
+    private String genre = "";
 
-    public Long getId() {
-        return id;
+    public void setMovie(String titel, String jahr, Integer id, String director, String actor, String genre) {
+        setFilmname(titel);
+        setJahr(jahr);
+        setId(id);
+        setRegisseur(director);
+        setSchauspieler(actor);
+        setGenre(genre);
+    }
+    public Integer getId() {
+        return mapper_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { mapper_id = id; }
 
     public String getFilmname() {
         return filmname;
@@ -43,6 +49,14 @@ public class Movie implements Serializable, Cloneable {
 
     public void setRegisseur(String regisseur) {
         this.regisseur = regisseur;
+    }
+
+    public String getGenre() {
+        return regisseur;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getJahr() {
@@ -61,14 +75,6 @@ public class Movie implements Serializable, Cloneable {
         this.schauspieler = schauspieler;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
     @Override
     public Movie clone() throws CloneNotSupportedException {
         try {
@@ -80,9 +86,7 @@ public class Movie implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "Movie{" + /*"id=" + id +*/ "filmname=" + filmname
-                + ", regisseur=" + regisseur + ", jahr=" + jahr + ", schauspieler="
-                + schauspieler + ", birthDate=" + birthDate + '}';
+        return filmname;
     }
 
 }

@@ -32,14 +32,14 @@ public class MovieUI extends UI {
     Grid movieList = new Grid();
     Button newMovie = new Button("Neuer Eintrag");
 
-    // ContactForm is an example of a custom component class
-    MovieForm movieForm = new MovieForm();
-
     // ContactService is a in-memory mock DAO that mimics
     // a real-world datasource. Typically implemented for
     // example as EJB or Spring Data based service.
     MovieService service = MovieService.createDemoService();
 
+    // ContactForm is an example of a custom component class
+    MovieForm movieForm = new MovieForm();
+    InsertForm insertForm = new InsertForm();
 
     /* The "Main method".
      *
@@ -61,8 +61,8 @@ public class MovieUI extends UI {
          * to synchronously handle those events. Vaadin automatically sends
          * only the needed changes to the web page without loading a new page.
          */
-        newMovie.addClickListener(e -> movieForm.edit(new Movie()));
-
+        //newMovie.addClickListener(e -> movieForm.edit(new Movie()));
+        newMovie.addClickListener(e -> insertForm.edit(new Movie()));
         filter.setInputPrompt("Filme filtern...");
         filter.addTextChangeListener(e -> refreshMovies(e.getText()));
 
@@ -70,8 +70,8 @@ public class MovieUI extends UI {
         movieList.setColumnOrder("filmname", "jahr");
         movieList.removeColumn("id");
         movieList.removeColumn("regisseur");
-        movieList.removeColumn("birthDate");
         movieList.removeColumn("schauspieler");
+        movieList.removeColumn("genre");
         movieList.setSelectionMode(Grid.SelectionMode.SINGLE);
         movieList.addSelectionListener(e
                 -> movieForm.edit((Movie) movieList.getSelectedRow()));
@@ -100,7 +100,7 @@ public class MovieUI extends UI {
         movieList.setSizeFull();
         left.setExpandRatio(movieList, 1);
 
-        HorizontalLayout mainLayout = new HorizontalLayout(left, movieForm);
+        HorizontalLayout mainLayout = new HorizontalLayout(left, movieForm, insertForm);
         mainLayout.setSizeFull();
         mainLayout.setExpandRatio(left, 1);
 
@@ -124,6 +124,7 @@ public class MovieUI extends UI {
         movieList.setContainerDataSource(new BeanItemContainer<>(
                 Movie.class, service.findAll(stringFilter)));
         movieForm.setVisible(false);
+        insertForm.setVisible(false);
     }
 
 
