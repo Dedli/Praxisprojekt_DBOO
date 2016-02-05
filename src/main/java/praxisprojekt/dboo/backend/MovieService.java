@@ -16,7 +16,7 @@ public class MovieService {
     private static MovieService instance;
     private static PostgresRepository repo;
 
-    public static MovieService createDemoService() {
+    public static MovieService createService() {
         if (instance == null) {
             final MovieService movieService = new MovieService();
             repo = new PostgresRepository();

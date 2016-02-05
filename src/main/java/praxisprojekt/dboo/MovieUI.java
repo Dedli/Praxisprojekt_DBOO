@@ -27,7 +27,7 @@ public class MovieUI extends UI {
     Grid movieList = new Grid();
     Button newMovie = new Button("Neuer Eintrag");
 
-    MovieService service = MovieService.createDemoService();
+    MovieService service = MovieService.createService();
 
     // the forms represent the sidebar opening when clicking the button (insertForm) or a movie (movieForm)
     MovieForm movieForm = new MovieForm();
