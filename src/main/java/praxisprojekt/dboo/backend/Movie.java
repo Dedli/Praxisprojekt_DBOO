@@ -6,10 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * A simple DTO for the address book example.
- *
- * Serializable and cloneable Java Object that are typically persisted
- * in the database and can also be easily converted to different formats like JSON.
+ * contains all information about movie, mostly as strings
  */
 public class Movie implements Serializable, Cloneable {
 
@@ -52,7 +49,7 @@ public class Movie implements Serializable, Cloneable {
     }
 
     public String getGenre() {
-        return regisseur;
+        return genre;
     }
 
     public void setGenre(String genre) {

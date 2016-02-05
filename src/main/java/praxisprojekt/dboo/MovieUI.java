@@ -22,31 +22,18 @@ import javax.servlet.annotation.WebServlet;
 @Theme("valo")
 public class MovieUI extends UI {
 
-	/* Hundreds of widgets.
-	 * Vaadin's user interface components are just Java objects that encapsulate
-	 * and handle cross-browser support and client-server communication. The
-	 * default Vaadin components are in the com.vaadin.ui package and there
-	 * are over 500 more in vaadin.com/directory.
-     */
+	// defines components
     TextField filter = new TextField();
     Grid movieList = new Grid();
     Button newMovie = new Button("Neuer Eintrag");
 
-    // ContactService is a in-memory mock DAO that mimics
-    // a real-world datasource. Typically implemented for
-    // example as EJB or Spring Data based service.
     MovieService service = MovieService.createDemoService();
 
-    // ContactForm is an example of a custom component class
+    // the forms represent the sidebar opening when clicking the button (insertForm) or a movie (movieForm)
     MovieForm movieForm = new MovieForm();
     InsertForm insertForm = new InsertForm();
 
-    /* The "Main method".
-     *
-     * This is the entry point method executed to initialize and configure
-     * the visible user interface. Executed on every browser reload because
-     * a new instance is created for each web page loaded.
-     */
+    /* The "Main method" */
     @Override
     protected void init(VaadinRequest request) {
         configureComponents();
@@ -55,13 +42,7 @@ public class MovieUI extends UI {
 
 
     private void configureComponents() {
-         /* Synchronous event handling.
-         *
-         * Receive user interaction events on the server-side. This allows you
-         * to synchronously handle those events. Vaadin automatically sends
-         * only the needed changes to the web page without loading a new page.
-         */
-        //newMovie.addClickListener(e -> movieForm.edit(new Movie()));
+        // configure the components
         newMovie.addClickListener(e -> insertForm.edit(new Movie()));
         filter.setInputPrompt("Filme filtern...");
         filter.addTextChangeListener(e -> refreshMovies(e.getText()));
@@ -78,18 +59,8 @@ public class MovieUI extends UI {
         refreshMovies();
     }
 
-    /* Robust layouts.
-     *
-     * Layouts are components that contain other components.
-     * HorizontalLayout contains TextField and Button. It is wrapped
-     * with a Grid into VerticalLayout for the left side of the screen.
-     * Allow user to resize the components with a SplitPanel.
-     *
-     * In addition to programmatically building layout in Java,
-     * you may also choose to setup layout declaratively
-     * with Vaadin Designer, CSS and HTML.
-     */
     private void buildLayout() {
+        // configure the layout
         HorizontalLayout actions = new HorizontalLayout(filter, newMovie);
         actions.setWidth("100%");
         filter.setWidth("100%");
@@ -104,18 +75,9 @@ public class MovieUI extends UI {
         mainLayout.setSizeFull();
         mainLayout.setExpandRatio(left, 1);
 
-        // Split and allow resizing
         setContent(mainLayout);
     }
 
-    /* Choose the design patterns you like.
-     *
-     * It is good practice to have separate data access methods that
-     * handle the back-end access and/or the user interface updates.
-     * You can further split your code into classes to easier maintenance.
-     * With Vaadin you can follow MVC, MVP or any other design pattern
-     * you choose.
-     */
     void refreshMovies() {
         refreshMovies(filter.getValue());
     }
@@ -130,11 +92,7 @@ public class MovieUI extends UI {
 
 
 
-    /*  Deployed as a Servlet or Portlet.
-     *
-     *  You can specify additional servlet parameters like the URI and UI
-     *  class name and turn on production mode when you have finished developing the application.
-     */
+    /*  Deployed as a Servlet. */
     @WebServlet(urlPatterns = "/*")
     @VaadinServletConfiguration(ui = MovieUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {

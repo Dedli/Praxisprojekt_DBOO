@@ -13,8 +13,6 @@ import java.util.logging.Logger;
  * simulating real world DAO. Typically these something that the Java EE
  * or Spring backend services provide.
  */
-// Backend service class. This is just a typical Java backend implementation
-// class and nothing Vaadin specific.
 public class MovieService {
 
     private static MovieService instance;
@@ -24,7 +22,7 @@ public class MovieService {
         if (instance == null) {
             final MovieService movieService = new MovieService();
             repo = new PostgresRepository();
-            HashMap hashMap = repo.standardSearch("movie");
+            HashMap hashMap = repo.standardSearch();
 
             for (Object value : hashMap.values())
             {
@@ -76,9 +74,6 @@ public class MovieService {
     }
 
     public synchronized void save(Movie entry) {
-        //if (entry.getId() == null) {
-        //    entry.setId(nextId++);
-        //}
         try {
             entry = (Movie) BeanUtils.cloneBean(entry);
         } catch (Exception ex) {
@@ -89,6 +84,14 @@ public class MovieService {
 
     public synchronized void saveToDb(Movie entry) {
         repo.insert(entry);
+    }
+
+    public synchronized void updateToDb(Movie entry) {
+        repo.update(entry);
+    }
+
+    public synchronized void deleteFromDb(Movie entry) {
+        repo.delete(entry);
     }
 
     public String nf2_query(String functionality, String column, Movie movie1, Movie movie2) {

@@ -3,7 +3,6 @@ package praxisprojekt.dboo;
 import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
@@ -22,12 +21,14 @@ import java.util.HashMap;
  */
 public class MovieForm extends FormLayout {
 
-    Button save = new Button("Speichern", this::save);
+    // all components for the movieform are defined here
+    Button save = new Button("Speichern", this::change);
     Button cancel = new Button("Abbruch", this::cancel);
+    Button delete = new Button("Löschen", this::delete);
     TextField filmname = new TextField("Filmname");
     TextField jahr = new TextField("Erscheinungsjahr");
     TextField regisseur = new TextField("Regisseur");
-    // TextField schauspieler = new TextField("Schauspieler");
+    TextField genre = new TextField("Genre");
     TextArea schauspieler = new TextArea("Schauspieler");
 
     Button difference = new Button("\u2215", this::nf2_difference);
@@ -55,11 +56,7 @@ public class MovieForm extends FormLayout {
     }
 
     private void configureComponents() {
-        /* Highlight primary actions.
-         *
-         * With Vaadin built-in styles you can highlight the primary save button
-         * and give it a keyboard shortcut for a better UX.
-         */
+        // configure button shortcuts and style theme
         save.setStyleName(ValoTheme.BUTTON_PRIMARY);
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
@@ -70,9 +67,13 @@ public class MovieForm extends FormLayout {
         setSizeUndefined();
         setMargin(true);
 
+        // construct top buttons
+        // --commented out delete button
+        // HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
+        // construct operator button layout
         HorizontalLayout firstRow = new HorizontalLayout(union, intersection, difference);
         firstRow.setSpacing(true);
         HorizontalLayout secondRow = new HorizontalLayout(subset, properSubset);
@@ -89,7 +90,7 @@ public class MovieForm extends FormLayout {
         properSubset.setDescription("Echte Teilmenge / Proper Subset");
         equal.setDescription("Gleich / Equal");
         notEqual.setDescription("Ungleich / not Equal");
-        schauspieler.setRows(3);
+        schauspieler.setRows(2);
 
         result.setSizeUndefined();
         result.setWidth("220px");
@@ -98,7 +99,7 @@ public class MovieForm extends FormLayout {
         resultPanel.setContent(result);
         resultPanel.setVisible(false);
         // resultPanel.getContent().setSizeUndefined();
-        addComponents(actions, filmname, regisseur, jahr, schauspieler, lowerButtons, columnPicker,moviePicker, resultPanel);
+        addComponents(actions, filmname, regisseur, jahr, genre, schauspieler, lowerButtons, columnPicker,moviePicker, resultPanel);
         result.setVisible(false);
         equal.setWidth("50px");
         notEqual.setWidth("50px");
@@ -115,34 +116,6 @@ public class MovieForm extends FormLayout {
         moviePicker.setVisible(false);
     }
 
-    /* Use any JVM language.
-     *
-     * Vaadin supports all languages supported by Java Virtual Machine 1.6+.
-     * This allows you to program user interface in Java 8, Scala, Groovy or any other
-     * language you choose.
-     * The new languages give you very powerful tools for organizing your code
-     * as you choose. For example, you can implement the listener methods in your
-     * compositions or in separate controller classes and receive
-     * to various Vaadin component events, like button clicks. Or keep it simple
-     * and compact with Lambda expressions.
-     */
-    public void save(Button.ClickEvent event) {
-        try {
-            // Commit the fields from UI to DAO
-            formFieldBindings.commit();
-
-            // Save DAO to backend with direct synchronous service API
-            getUI().service.save(movie);
-
-            String msg = String.format("'%s' gespeichert.",
-                    movie.getFilmname());
-            Notification.show(msg,Type.TRAY_NOTIFICATION);
-            getUI().refreshMovies();
-        } catch (FieldGroup.CommitException e) {
-            // Validation exceptions could be shown here
-        }
-    }
-
     public void change(Button.ClickEvent event) {
         try {
             // Commit the fields from UI to DAO
@@ -150,6 +123,7 @@ public class MovieForm extends FormLayout {
 
             // Save DAO to backend with direct synchronous service API
             getUI().service.save(movie);
+            getUI().service.updateToDb(movie);
 
             String msg = String.format("'%s' gespeichert.",
                     movie.getFilmname());
@@ -160,9 +134,29 @@ public class MovieForm extends FormLayout {
         }
     }
 
+    public void delete(Button.ClickEvent event) {
+        try {
+            // Commit the fields from UI to DAO
+            formFieldBindings.commit();
+
+            // Save DAO to backend with direct synchronous service API
+            getUI().service.delete(movie);
+            getUI().service.deleteFromDb(movie);
+
+            String msg = String.format("'%s' gespeichert.",
+                    movie.getFilmname());
+            Notification.show(msg,Type.TRAY_NOTIFICATION);
+            getUI().refreshMovies();
+        } catch (FieldGroup.CommitException e) {
+            // Validation exceptions could be shown here
+        }
+    }
+
+
     public void cancel(Button.ClickEvent event) {
         // Place to call business logic.
         Notification.show("Abgebrochen", Type.TRAY_NOTIFICATION);
+        resetButtons();
         getUI().refreshMovies();
         getUI().movieList.select(null);
     }
@@ -219,6 +213,8 @@ public class MovieForm extends FormLayout {
         showPicker("Not Equal");
     }
 
+    // shows the two pickers for column and movie
+    // runs nf2_query with specific functionality parameter
     public void showPicker(String functionality) {
         columnPicker.setVisible(true);
         columnPicker.addListener(new Property.ValueChangeListener() {

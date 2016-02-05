@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.logging.Logger;
-
+/** Das Repository stellt die Verbindung zur Datenbank her und führt alle Anfragen aus **/
 public class PostgresRepository {
 
     private Logger lgr = Logger.getLogger(this.getClass().getName());
@@ -30,13 +30,13 @@ public class PostgresRepository {
 
     public void insert(Movie entry) {
         System.out.println(entry);
-        String sqlString = "SELECT insertMovie('"+entry.getFilmname()+"',"+entry.getJahr()+",ARRAY["+entry.getSchauspieler()+"]::character varying[],ARRAY["+entry.getRegisseur()+"]::character varying[],ARRAY["+entry.getGenre()+"]::character varying[]);";
+        String sqlString = "SELECT insertMovie('"+entry.getFilmname()+"',"+entry.getJahr()+",ARRAY['"+entry.getSchauspieler()+"']::character varying[],ARRAY['"+entry.getRegisseur()+"']::character varying[],ARRAY['"+entry.getGenre()+"']::character varying[]);";
+        System.out.println(sqlString);
         long startTime = System.nanoTime();
         String result = "";
         try {
             Statement s = conn.createStatement();
             boolean r = s.execute(sqlString);
-            System.out.println(sqlString);
             s.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,14 +47,45 @@ public class PostgresRepository {
         System.out.println("Query ended in " + new DecimalFormat("#.########").format(seconds) + " s.");
     }
 
-    public void update(String table, String mapper_id) {
-        // TODO
+    public void update(Movie entry) {
+        System.out.println(entry);
+        String sqlString = "SELECT updateMovie("+entry.getId()+",'"+entry.getFilmname()+"',"+entry.getJahr()+",ARRAY['"+entry.getSchauspieler()+"']::character varying[],ARRAY['"+entry.getRegisseur()+"']::character varying[],ARRAY['"+entry.getGenre()+"']::character varying[]);";
+        System.out.println(sqlString);
+        long startTime = System.nanoTime();
+        String result = "";
+        try {
+            Statement s = conn.createStatement();
+            boolean r = s.execute(sqlString);
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long estimatedTime = System.nanoTime() - startTime;
+        final double seconds = ((double) estimatedTime / 1000000000);
+
+        System.out.println("Query ended in " + new DecimalFormat("#.########").format(seconds) + " s.");
     }
 
-    public void delete(String table, String values) {
-        // TODO
+    public void delete(Movie entry) {
+        System.out.println(entry);
+        String sqlString = "SELECT deleteMovie("+entry.getId()+");";
+        System.out.println(sqlString);
+        long startTime = System.nanoTime();
+        String result = "";
+        try {
+            Statement s = conn.createStatement();
+            boolean r = s.execute(sqlString);
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long estimatedTime = System.nanoTime() - startTime;
+        final double seconds = ((double) estimatedTime / 1000000000);
+
+        System.out.println("Query ended in " + new DecimalFormat("#.########").format(seconds) + " s.");
     }
 
+    // runs query with the given operator parameter and the movie values
     public String operatorQuery(Movie movie1, Movie movie2, String column, String table, String operator){
         System.out.println("movie1: " + movie1 + " movie2: " + movie2);
         long startTime = System.nanoTime();
@@ -78,7 +109,8 @@ public class PostgresRepository {
         return result;
     }
 
-    public HashMap standardSearch(String table){
+    // returns everything in the database
+    public HashMap standardSearch(){
         long startTime = System.nanoTime();
         HashMap<Integer, Movie> queriedMovies = new HashMap<>();
         try {
