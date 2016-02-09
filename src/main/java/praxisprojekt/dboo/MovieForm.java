@@ -69,8 +69,8 @@ public class MovieForm extends FormLayout {
 
         // construct top buttons
         // --commented out delete button
-        // HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
-        HorizontalLayout actions = new HorizontalLayout(save, cancel);
+        HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+        // HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
         // construct operator button layout
@@ -99,6 +99,11 @@ public class MovieForm extends FormLayout {
         resultPanel.setContent(result);
         resultPanel.setVisible(false);
         // resultPanel.getContent().setSizeUndefined();
+        filmname.setWidth("335px");
+        regisseur.setWidth("335px");
+        genre.setWidth("335px");
+        schauspieler.setWidth("335px");
+        jahr.setWidth("59px");
         addComponents(actions, filmname, regisseur, jahr, genre, schauspieler, lowerButtons, columnPicker,moviePicker, resultPanel);
         result.setVisible(false);
         equal.setWidth("50px");
@@ -143,7 +148,7 @@ public class MovieForm extends FormLayout {
             getUI().service.delete(movie);
             getUI().service.deleteFromDb(movie);
 
-            String msg = String.format("'%s' gespeichert.",
+            String msg = String.format("'%s' gelöscht.",
                     movie.getFilmname());
             Notification.show(msg,Type.TRAY_NOTIFICATION);
             getUI().refreshMovies();

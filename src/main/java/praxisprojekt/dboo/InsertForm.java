@@ -44,7 +44,7 @@ public class InsertForm extends FormLayout {
 
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
-
+        jahr.setWidth("65px");
         schauspieler.setRows(3);
         addComponents(actions, filmname, regisseur, jahr, genre, schauspieler);
     }
